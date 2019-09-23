@@ -1,5 +1,6 @@
 package br.com.codenation.entity;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -21,6 +22,7 @@ public class User implements UserDetails {
 	private Long id;
 	private String email;
 	private String password;
+	private LocalDateTime createdAt;
 
 	public Long getId() {
 		return id;
@@ -44,6 +46,14 @@ public class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	@Override
@@ -80,6 +90,11 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", createdAt=" + createdAt + "]";
 	}
 
 }
