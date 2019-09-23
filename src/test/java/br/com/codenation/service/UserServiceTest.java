@@ -1,5 +1,6 @@
 package br.com.codenation.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,6 +12,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.codenation.entity.User;
@@ -62,6 +65,31 @@ public class UserServiceTest {
 		expectedException.expectMessage("E-mail already registered");
 		
 		userService.toSave(user);
+	}
+	
+	@Test
+	public void mustSearchUserByEmail() {	
+		when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
+		userService.loadUserByUsername(EMAIL);
+		
+		verify(userRepository).findByEmail(EMAIL);
+	}
+	
+	@Test
+	public void mustReturnAuthenticatedUser() {
+		when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
+		UserDetails authenticatedUser = userService.loadUserByUsername(EMAIL);
+		
+		assertThat(authenticatedUser.getUsername()).isEqualTo(EMAIL);
+		assertThat(authenticatedUser.getPassword()).isEqualTo(PASSWORD);
+	}
+	
+	@Test
+	public void shouldNotReturnUserWithInvalidCredentials() {
+		expectedException.expect(UsernameNotFoundException.class);
+		expectedException.expectMessage("Username or password is invalid");
+		
+		userService.loadUserByUsername(EMAIL);
 	}
 	
 }

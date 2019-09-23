@@ -2,6 +2,9 @@ package br.com.codenation.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import br.com.codenation.entity.User;
 import br.com.codenation.repository.UserRepository;
 import br.com.codenation.service.exception.DuplicateEmailException;
@@ -24,6 +27,12 @@ public class UserService implements UserServiceInterface {
 		}
 		
 		return this.userRepository.save(user);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		
+		return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Username or password is invalid"));
 	}
 
 }
