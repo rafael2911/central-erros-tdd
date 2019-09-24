@@ -39,4 +39,22 @@ public class UserRepositoryTest {
 		assertThat(user.getPassword()).isEqualTo("654321");
 	}
 	
+	@Test
+	public void shouldNotFindUserWithNonexistentEmail() {
+		Optional<User> optional = userRepository.findByEmail("teste@email.com");
+		
+		assertThat(optional.isPresent()).isFalse();
+	}
+	
+	@Test
+	public void mustRegisterUserInTheDatabase() {
+		User user = new User();
+		user.setEmail("novo@email.com");
+		user.setPassword("senha");
+		
+		userRepository.save(user);
+		
+		assertThat(user.getId()).isEqualTo(3L);
+	}
+	
 }

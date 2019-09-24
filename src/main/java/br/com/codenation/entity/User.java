@@ -3,11 +3,13 @@ package br.com.codenation.entity;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,9 @@ public class User implements UserDetails {
 	private String email;
 	private String password;
 	private LocalDateTime createdAt;
+
+	@OneToMany(mappedBy = "user")
+	private List<Log> logs;
 
 	public Long getId() {
 		return id;
@@ -90,6 +95,14 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		
 		return true;
+	}
+	
+	public List<Log> getLogs() {
+		return logs;
+	}
+	
+	public void setLogs(List<Log> logs) {
+		this.logs = logs;
 	}
 
 	@Override
